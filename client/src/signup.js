@@ -18,7 +18,6 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Signup submitted:', formData);
-    // TODO: send formData to backend with fetch/axios
   };
 
   return (

@@ -17,7 +17,6 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Login submitted:', formData);
-    // TODO: send formData to backend with fetch/axios
   };
 
   return (
