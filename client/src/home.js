@@ -2,6 +2,7 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import Login from './login';
 import Signup from './signup';
+import HomePage from './homepage';
 import './home.css';
 
 function Home() {
@@ -22,9 +23,10 @@ function Home() {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home/>} />
-      <Route path="/login" element={<Login/>} />
-      <Route path="/signup" element={<Signup/>} />
+      <Route path="/" element={<Home/>}/>
+      <Route path="/login" element={<Login/>}/>
+      <Route path="/signup" element={<Signup/>}/>
+      <Route path="/home" element={<HomePage/>}/>
     </Routes>
   );
 }
