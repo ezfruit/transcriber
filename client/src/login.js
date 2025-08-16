@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.css'
 
@@ -12,6 +12,23 @@ function Login() {
     });
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch("http://localhost:5000/check", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                if (response.ok) {
+                    navigate("/home")
+                }
+            } catch (error) {
+                console.error("Error fetching user:", error);
+            }
+        };
+        fetchUser();
+    }, [navigate]);
 
     const handleChange = (e) => {
         setFormData({

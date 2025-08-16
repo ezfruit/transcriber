@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
@@ -6,6 +6,10 @@ function HomePage() {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
+
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef = useRef(null);
+    const chunksRef = useRef([]);
 
     const handleLogout = async () => {
         try {
@@ -19,6 +23,38 @@ function HomePage() {
             console.error("Logout failed:", error);
         }
     }
+
+    const handleClick = async () => {
+        if (!isRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorderRef.current = new MediaRecorder(stream);
+                
+                chunksRef.current = [];
+                mediaRecorderRef.current.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    chunksRef.current.push(event.data);
+                }
+                };
+
+                mediaRecorderRef.current.start();
+                setIsRecording(true);
+            } catch (error) {
+                console.error("Error accessing microphone:", error);
+            }
+        } else {
+            // Stop recording
+            mediaRecorderRef.current.stop();
+            mediaRecorderRef.current.onstop = () => {
+                const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
+                console.log("Recording finished:", audioBlob);
+
+                mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+                // TODO: Send audioBlob to ASR backend
+            };
+            setIsRecording(false);
+        }
+    };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -44,7 +80,12 @@ function HomePage() {
 
     return (
         <div className="homepage">
-            <h1>Hello, {username}!</h1>
+            <div className="welcome">
+                <h1>Hello, {username}!</h1>
+            </div>
+            <div className="transcript-buttons">
+                <button onClick={handleClick}>{isRecording ? "Stop Recording" : "Add Recording"}</button>
+            </div>
             <button onClick={handleLogout}>Logout</button>
         </div>
     );
