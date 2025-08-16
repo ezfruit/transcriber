@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './signup.css'
 
 function Signup() {
 
@@ -10,6 +11,8 @@ function Signup() {
         email: '',
         password: ''
     });
+
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleChange = (e) => {
         setFormData({
@@ -36,7 +39,8 @@ function Signup() {
             if (response.ok) {
                 navigate('/login');
             } else {
-                alert(`Error: ${data.message}`);
+                setFormData({username: "", email: "", password: ""})
+                setErrorMessage(data.error);
             }
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -75,6 +79,7 @@ function Signup() {
                 <button type="submit">Sign Up</button>
             </form>
             <br />
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             Already have an account? Log in <Link to="/login" className="hyperlink">here.</Link>
         </div>
     );

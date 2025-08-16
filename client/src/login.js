@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './login.css'
 
 function Login() {
 
@@ -9,6 +10,8 @@ function Login() {
         username: '',
         password: ''
     });
+
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleChange = (e) => {
         setFormData({
@@ -27,6 +30,7 @@ function Login() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
+                credentials: "include",
             });
 
             const data = await response.json();
@@ -35,7 +39,8 @@ function Login() {
             if (response.ok) {
                 navigate('/home');
             } else {
-                alert(`Error: ${data.message}`);
+                setFormData({username: "", password: ""})
+                setErrorMessage(data.error);
             }
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -66,6 +71,7 @@ function Login() {
                 <button type="submit">Log In</button>
             </form>
             <br />
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             Don't have an account? Sign up <Link to="/signup" className="hyperlink">here.</Link>
         </div>
     );

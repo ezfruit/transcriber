@@ -1,11 +1,32 @@
 
-import { Routes, Route, Link } from 'react-router-dom';
+import { useEffect } from "react";
+import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import Login from './login';
 import Signup from './signup';
 import HomePage from './homepage';
 import './home.css';
 
 function Home() {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/check", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          navigate("/home")
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, [navigate]);
+
   return (
     <div className="app-container">
       <h1 className="app-title">Easy Transcribe</h1>

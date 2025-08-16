@@ -6,3 +6,8 @@
 .hyperlink:hover {
   color: purple;
 }
+
+.error-message {
+    color: red;
+    margin-top: 1rem;
+}
