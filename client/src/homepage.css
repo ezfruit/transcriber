@@ -1,0 +1,17 @@
+.transcript-history-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.2s;
+  text-decoration: none;
+}
+
+.transcript-history-button:hover {
+  background-color: #0056b3;
+}

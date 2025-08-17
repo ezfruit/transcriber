@@ -4,6 +4,7 @@ import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import Login from './login';
 import Signup from './signup';
 import HomePage from './homepage';
+import History from './history';
 import './home.css';
 
 function Home() {
@@ -48,6 +49,7 @@ function App() {
       <Route path="/login" element={<Login/>}/>
       <Route path="/signup" element={<Signup/>}/>
       <Route path="/home" element={<HomePage/>}/>
+      <Route path="/history" element={<History/>}/>
     </Routes>
   );
 }

@@ -5,11 +5,19 @@ import sqlite3
 import jwt
 from datetime import datetime, timedelta, timezone
 import secrets
+import torch
+from transformers import pipeline
+import tempfile
+import subprocess
+import os
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 app.config["SECRET_KEY"] = secrets.token_hex(32)
+
+device = 0 if torch.cuda.is_available() else -1
+asr_pipeline = pipeline("automatic-speech-recognition", model="openai/whisper-medium", device=device)
 
 def dict_factory(cursor, row):
     d = {}
@@ -35,8 +43,29 @@ def init_db():
         CREATE TABLE IF NOT EXISTS user_tokens (
                  username TEXT NOT NULL,
                  token TEXT NOT NULL)''')
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS transcripts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                text TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
     conn.commit()
     conn.close()
+
+# Get the current username if they are authenticated
+def get_username(cur):
+
+    auth_token = request.cookies.get("authToken")
+
+    if not auth_token:
+        return None
+
+    cur.execute("SELECT * FROM user_tokens WHERE token = ?", (auth_token,))
+    user = cur.fetchone()
+
+    if user:
+        return user["username"]
+    return None
 
 @app.route("/")
 def home():
@@ -69,7 +98,6 @@ def check():
 
         # Deny access if the user doesn't have an auth token cookie
         if not auth_token:
-            print("No cookie")
             return jsonify({"error": "Unauthorized access. Please login."}), 401
 
         conn = db_connection()
@@ -151,6 +179,101 @@ def signup():
         return jsonify({"error": "Username or email already exists!"}), 409
     except sqlite3.Error:
         return jsonify({"error": "Internal server error"}), 500
+    finally:
+        if conn:
+            conn.close()
+
+@app.route("/transcribe", methods=['POST'])
+def transcribe():
+
+    if "audio" not in request.files:
+        return jsonify({"error": "No audio file uploaded"}), 400
+    
+    audio_file = request.files["audio"]
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp_webm:
+        audio_file.save(tmp_webm.name)
+
+    # Convert .webm to .wav
+    tmp_wav_path = tmp_webm.name.replace(".webm", ".wav")
+    try:
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", tmp_webm.name, tmp_wav_path],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": "ffmpeg conversion failed", "details": e.stderr.decode()}), 500
+
+    result = asr_pipeline(tmp_wav_path)
+
+    # Cleanup temp files
+    os.remove(tmp_webm.name)
+    os.remove(tmp_wav_path)
+
+    conn = None
+
+    text = result["text"]
+
+    try:
+        conn = db_connection()
+        cur = conn.cursor()
+
+        username = get_username(cur)
+
+        cur.execute("INSERT INTO transcripts (username, text) VALUES (?, ?)", (username, text))
+
+        conn.commit()
+    except Exception:
+        return jsonify({"error": "An unexpected error occurred"}), 500
+    finally:
+        if conn:
+            conn.close()
+    
+    return jsonify({"text": text})
+
+@app.route("/get-transcripts", methods=['GET'])
+def get_transcripts():
+    conn = None
+    try:
+        conn = db_connection()
+        cur = conn.cursor()
+
+        username = get_username(cur)
+
+        cur.execute("SELECT * FROM transcripts WHERE username = ? ORDER BY created_at DESC", (username,))
+
+        transcripts = cur.fetchall()
+
+        return jsonify(transcripts)
+
+    except Exception:
+        return jsonify({"error": "An unexpected error occurred"}), 500
+    finally:
+        if conn:
+            conn.close()
+
+@app.route("/delete-transcript/<int:transcript_id>", methods=['DELETE'])
+def delete_transcript(transcript_id):
+    conn = None
+    try:
+        conn = db_connection()
+        cur = conn.cursor()
+
+        username = get_username(cur)
+        if not username:
+            return jsonify({"error": "Unauthorized"}), 401
+
+        cur.execute("DELETE FROM transcripts WHERE id = ? AND username = ?", (transcript_id, username))
+        conn.commit()
+
+        if cur.rowcount == 0:
+            return jsonify({"error": "Transcript not found"}), 404
+
+        return jsonify({"success": True}), 200
+    except Exception:
+        return jsonify({"error": "An unexpected error occurred"}), 500
     finally:
         if conn:
             conn.close()

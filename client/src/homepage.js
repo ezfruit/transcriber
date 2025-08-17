@@ -1,13 +1,19 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import './homepage.css'
 
 function HomePage() {
 
     const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    const [transcription, setTranscription] = useState("");
 
     const [isRecording, setIsRecording] = useState(false);
+    const [isTranscribing, setIsTranscribing] = useState(false); 
+
     const mediaRecorderRef = useRef(null);
     const chunksRef = useRef([]);
 
@@ -45,12 +51,33 @@ function HomePage() {
         } else {
             // Stop recording
             mediaRecorderRef.current.stop();
-            mediaRecorderRef.current.onstop = () => {
+            mediaRecorderRef.current.onstop = async () => {
                 const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
                 console.log("Recording finished:", audioBlob);
 
                 mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-                // TODO: Send audioBlob to ASR backend
+
+                const formData = new FormData();
+                formData.append("audio", audioBlob, "recording.webm");
+
+                setIsTranscribing(true);
+
+                // Send the audio to the Whisper ASR model
+                try {
+                    const response = await fetch("http://localhost:5000/transcribe", {
+                        method: "POST",
+                        body: formData,
+                        credentials: "include",
+                    });
+                    const data = await response.json();
+                    console.log("Transcription:", data.text);
+                    setTranscription(data.text);
+                } catch (error) {
+                    console.error("Transcription failed:", error);
+                    setTranscription("Error transcribing audio.");
+                } finally {
+                    setIsTranscribing(false); // done transcribing
+                }
             };
             setIsRecording(false);
         }
@@ -73,10 +100,22 @@ function HomePage() {
             } catch (error) {
                 console.error("Error fetching user:", error);
                 navigate("/login");
+            } finally {
+                setLoading(false);
             }
         };
         fetchUser();
     }, [navigate]);
+
+    if (loading) {
+        return (
+        <div>
+            <div> 
+                Loading...
+            </div>
+        </div>
+        );
+    }
 
     return (
         <div className="homepage">
@@ -86,7 +125,21 @@ function HomePage() {
             <div className="transcript-buttons">
                 <button onClick={handleClick}>{isRecording ? "Stop Recording" : "Add Recording"}</button>
             </div>
-            <button onClick={handleLogout}>Logout</button>
+            <button onClick={handleLogout} className="logout-button">Logout</button>
+            <br />
+            <div className="transcript">
+                {isTranscribing ? (
+                    <span className="loading-message">Transcribing audio, please wait...</span>
+                ) : transcription?.trim() ? (
+                    <span>{transcription}</span>
+                ) : (
+                    <span className="empty-message">
+                    Click on the Add Recording button to start adding your transcripts!
+                    </span>
+                )}
+            </div>
+            <br />
+            <Link to="/history" className="transcript-history-button">Transcript History</Link>
         </div>
     );
 }
