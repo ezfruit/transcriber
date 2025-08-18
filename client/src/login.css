@@ -1,0 +1,19 @@
+.login-container {
+    text-align: center;
+    background: #fff; 
+    color: #333;                       
+    padding: 2rem 3rem;                 
+    border-radius: 12px;                
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);  
+    width: 100%;
+    max-width: 450px; 
+    margin: 0 auto;    
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;             
+}
+
+.link-to-signup {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+}

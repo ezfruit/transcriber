@@ -38,9 +38,9 @@ function HomePage() {
                 
                 chunksRef.current = [];
                 mediaRecorderRef.current.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    chunksRef.current.push(event.data);
-                }
+                    if (event.data.size > 0) {
+                        chunksRef.current.push(event.data);
+                    }
                 };
 
                 mediaRecorderRef.current.start();

@@ -67,7 +67,7 @@ function Login() {
 
     return (
         <div className="login-container">
-            <h2>Welcome Back!</h2>
+            <h2 className="title">Welcome back!</h2>
             <form onSubmit={handleSubmit} className="login-form">
                 <input
                 type="text"
@@ -76,6 +76,7 @@ function Login() {
                 value={formData.username}
                 onChange={handleChange}
                 required
+                className="underline-input"
                 />
                 <input
                 type="password"
@@ -84,12 +85,12 @@ function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                className="underline-input"
                 />
-                <button type="submit">Log In</button>
+                <button type="submit" className="login-button">Log In</button>
             </form>
-            <br />
             {errorMessage && <p className="error-message">{errorMessage}</p>}
-            Don't have an account? Sign up <Link to="/signup" className="hyperlink">here.</Link>
+            <p className="link-to-signup">Don't have an account? Sign up <Link to="/signup" className="hyperlink">here.</Link></p>
         </div>
     );
 }

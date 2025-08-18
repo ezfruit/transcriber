@@ -79,7 +79,7 @@ function Signup() {
 
     return (
         <div className="signup-container">
-            <h2>Create an Account</h2>
+            <h2 className="title">Create an Account</h2>
             <form onSubmit={handleSubmit} className="signup-form">
                 <input
                 type="text"
@@ -88,6 +88,7 @@ function Signup() {
                 value={formData.username}
                 onChange={handleChange}
                 required
+                className="underline-input"
                 />
                 <input
                 type="email"
@@ -96,6 +97,7 @@ function Signup() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                className="underline-input"
                 />
                 <input
                 type="password"
@@ -104,12 +106,12 @@ function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                className="underline-input"
                 />
-                <button type="submit">Sign Up</button>
+                <button type="submit" className="signup-button">Sign Up</button>
             </form>
-            <br />
             {errorMessage && <p className="error-message">{errorMessage}</p>}
-            Already have an account? Log in <Link to="/login" className="hyperlink">here.</Link>
+            <p className="link-to-login">Already have an account? Log in <Link to="/login" className="hyperlink">here.</Link></p>
         </div>
     );
 }
