@@ -164,6 +164,14 @@ def signup():
         if not username or not email or not password:
             return jsonify({"error": "Missing fields!"}), 400
         
+        # Weak username
+        if not (3 <= len(username) <= 20):
+            return jsonify({"error": "Username must be between 3-20 characters long"}), 400
+
+        # Weak password
+        if len(password) < 8:
+            return jsonify({"error": "Password must be at least 8 characters long"}), 400
+
         hashed_pw = generate_password_hash(password)
 
         conn = db_connection()

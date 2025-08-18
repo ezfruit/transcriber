@@ -56,7 +56,7 @@ function Login() {
             if (response.ok) {
                 navigate('/home');
             } else {
-                setFormData({username: "", password: ""})
+                setFormData(prev => ({...prev, password: ""}));
                 setErrorMessage(data.error);
             }
         } catch (error) {

@@ -41,6 +41,18 @@ function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        const { username, password } = formData;
+
+        if (username.length < 3 || username.length > 20) {
+            setErrorMessage("Username must be between 3-20 characters long.");
+            return;
+        }
+        if (password.length < 8) {
+            setFormData(prev => ({...prev, password: ""}));
+            setErrorMessage("Password must be at least 8 characters long.");
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost:5000/signup', {
                 method: 'POST',
