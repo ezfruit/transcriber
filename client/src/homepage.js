@@ -110,7 +110,7 @@ function HomePage() {
     if (loading) {
         return (
         <div>
-            <div> 
+            <div className="loading-message"> 
                 Loading...
             </div>
         </div>
@@ -122,24 +122,28 @@ function HomePage() {
             <div className="welcome">
                 <h1>Hello, {username}!</h1>
             </div>
-            <div className="transcript-buttons">
-                <button onClick={handleClick}>{isRecording ? "Stop Recording" : "Add Recording"}</button>
+            <div className="dashboard-buttons">
+                <Link to="/history" className={`transcript-history-button ${isRecording ? "disabled" : ""}`}>Transcript History</Link>
+                <button onClick={handleLogout} className={`logout-button ${isRecording ? "disabled" : ""}`}>Log out</button>
             </div>
-            <button onClick={handleLogout} className="logout-button">Logout</button>
             <br />
+            <div className="transcript-buttons">
+                <button onClick={handleClick} className={`recording-button ${isRecording ? "stop-recording" : ""}`}>{isRecording ? "Stop Recording" : "Add Recording"}</button>
+            </div>
             <div className="transcript">
-                {isTranscribing ? (
+                {isRecording ? (
+                    <span className="recording-message">Recording...</span>
+                ) : isTranscribing ? (
                     <span className="loading-message">Transcribing audio, please wait...</span>
                 ) : transcription?.trim() ? (
-                    <span>{transcription}</span>
+                    <span className="transcription">{transcription}</span>
                 ) : (
                     <span className="empty-message">
-                    Click on the Add Recording button to start adding your transcripts!
+                    Click on the "Add Recording" button to start adding your transcripts!
                     </span>
                 )}
             </div>
             <br />
-            <Link to="/history" className="transcript-history-button">Transcript History</Link>
         </div>
     );
 }

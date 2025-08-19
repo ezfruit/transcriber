@@ -14,10 +14,9 @@
 
 body {
     background: linear-gradient(135deg, #ffffff, #ffffff);
-    display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     font-family: "Inter", sans-serif;
 }

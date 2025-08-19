@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import './history.css'
 
 function History() {
@@ -73,9 +73,8 @@ function History() {
 
     if (loading) {
         return (
-        <div>
-            <h2>Transcript History</h2> 
-            <div> 
+        <div> 
+            <div className="loading-message"> 
                 Loading transcripts...
             </div>
         </div>
@@ -84,22 +83,23 @@ function History() {
 
     return (
         <div>
-            <h2>Transcript History</h2>
+            <h2 className="history-title">Transcript History</h2>
+            <div className="back-button-wrapper">
+                <Link to="/home" className="back-button">Back</Link>
+            </div>
             {transcripts.length === 0 ? (
-                <p>No transcripts yet.</p>
+                <p className="empty">No transcripts yet.</p>
             ) : (
                 <ul>
                 {transcripts.map((t) => (
-                    <li key={t.id} style={{ marginBottom: "1rem", position: "relative" }}>
-                    <div>
-                        <button className="delete-button" onClick={() => deleteTranscript(t.id)}> X </button>
-                        <div>
-                            <strong>{new Date(t.created_at).toLocaleString()}</strong>
+                    <li key={t.id} style={{ marginBottom: "1rem" }}>
+                        <div className="transcript-item">
+                            <button className="delete-button" onClick={() => deleteTranscript(t.id)}>X</button>
+                            <div className="transcript-content">
+                                <strong>{new Date(t.created_at).toLocaleString()}</strong>
+                                <div>{t.text}</div>
+                            </div>
                         </div>
-                        <div>
-                            {t.text}
-                        </div>
-                    </div>
                     </li>
                     ))}
                 </ul>

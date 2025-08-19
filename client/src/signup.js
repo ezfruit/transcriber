@@ -78,40 +78,42 @@ function Signup() {
     };
 
     return (
-        <div className="signup-container">
-            <h2 className="title">Create an Account</h2>
-            <form onSubmit={handleSubmit} className="signup-form">
-                <input
-                type="text"
-                name="username"
-                placeholder="Username"
-                value={formData.username}
-                onChange={handleChange}
-                required
-                className="underline-input"
-                />
-                <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="underline-input"
-                />
-                <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="underline-input"
-                />
-                <button type="submit" className="signup-button">Sign Up</button>
-            </form>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <p className="link-to-login">Already have an account? Log in <Link to="/login" className="hyperlink">here.</Link></p>
+        <div className="signup-page">
+            <div className="signup-container">
+                <h2 className="title">Create an Account</h2>
+                <form onSubmit={handleSubmit} className="signup-form">
+                    <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    required
+                    className="underline-input"
+                    />
+                    <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="underline-input"
+                    />
+                    <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="underline-input"
+                    />
+                    <button type="submit" className="signup-button">Sign Up</button>
+                </form>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                <p className="link-to-login">Already have an account? Log in <Link to="/login" className="hyperlink">here.</Link></p>
+            </div>
         </div>
     );
 }
