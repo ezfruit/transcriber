@@ -1,48 +1,21 @@
-.transcript-history-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.2s;
-    text-decoration: none;
-}
-
-.transcript-history-button:hover {
-    background-color: #0056b3;
-}
-
-.transcript-history-button.disabled,
-.logout-button.disabled {
-    opacity: 0.1;
-    pointer-events: none;
-    cursor: default;
-}
-
-.homepage {
-    text-align: center;
-}
-
-.welcome {
-    margin-top: 2rem;
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
-}
-
-.dashboard-buttons {
+.app-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 4rem; 
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
-.recording-button,
-.logout-button {
-    padding: 0.75rem 1.5rem;
+.app-title {
+    font-size: 5.0rem;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.login-button {
+    padding: 0.75rem 2.5rem;
+    margin-top: 1rem;
     font-size: 1rem;
     flex-direction: column;
     align-items: center;
@@ -53,38 +26,20 @@
     color: white;
     transition: background-color 0.2s;
     text-decoration: none;
-    justify-content: center;
-    
+    width: auto;
+    align-self: center;
 }
 
-.recording-button {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    padding: 0.75rem 3rem;
+.login {
+    display: flex;
+    gap: 1rem;
 }
 
-.recording-button:hover,
-.logout-button:hover {
+.login-button:hover {
     background-color: #0056b3;
 }
 
-/* Special styling for stop recording */
-.stop-recording {
-  background-color: red;
+.signup {
+    font-size: 1.5rem;
 }
 
-.stop-recording:hover {
-  background-color: darkred;
-}
-
-.recording-message,
-.loading-message,
-.transcription,
-.empty-message {
-    font-size: 2rem;
-}
-
-.transcription {
-    margin-left: 2rem;
-    margin-right: 2rem;
-}

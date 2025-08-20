@@ -90,13 +90,13 @@ function History() {
             {transcripts.length === 0 ? (
                 <p className="empty">No transcripts yet.</p>
             ) : (
-                <ul>
+                <ul className="list">
                 {transcripts.map((t) => (
                     <li key={t.id} style={{ marginBottom: "1rem" }}>
                         <div className="transcript-item">
                             <button className="delete-button" onClick={() => deleteTranscript(t.id)}>X</button>
                             <div className="transcript-content">
-                                <strong>{new Date(t.created_at).toLocaleString()}</strong>
+                                <strong>{new Date(t.created_at + "Z").toLocaleString("en-US", { timeZone: "America/New_York" })}</strong>
                                 <div>{t.text}</div>
                             </div>
                         </div>

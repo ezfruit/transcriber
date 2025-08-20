@@ -1,7 +1,13 @@
 .transcript-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;             
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;     
+    font-size: 2rem;    
+}
+
+.list {
+    margin-left: 4rem;
+    margin-right: 4rem;
 }
 
 .delete-button {
@@ -23,17 +29,13 @@
 }
 
 .transcript-content {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .history-title {
     font-size: 3rem;
     text-align: center;
-}
-
-.transcript-item {
-    font-size: 2rem;
 }
 
 .back-button-wrapper {
