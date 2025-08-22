@@ -48,7 +48,6 @@ function Signup() {
             return;
         }
         if (password.length < 8) {
-            setFormData(prev => ({...prev, password: ""}));
             setErrorMessage("Password must be at least 8 characters long.");
             return;
         }
@@ -67,7 +66,6 @@ function Signup() {
             if (response.ok) {
                 navigate('/login');
             } else {
-                setFormData({username: "", email: "", password: ""})
                 setErrorMessage(data.error);
             }
         } catch (error) {
