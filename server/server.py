@@ -17,19 +17,22 @@ CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 app.config["SECRET_KEY"] = secrets.token_hex(32)
 
 device = 0 if torch.cuda.is_available() else -1
-asr_pipeline = pipeline("automatic-speech-recognition", model="openai/whisper-medium", device=device)
+asr_pipeline = pipeline("automatic-speech-recognition", model="openai/whisper-small", device=device)
 
+# Function that returns a dictionary when querying from the database
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
 
+# Function that connects to the database
 def db_connection():
     conn = sqlite3.connect('database.db')
     conn.row_factory = dict_factory
     return conn
 
+# Function that initializes the database
 def init_db():
     conn = db_connection()
     cur = conn.cursor()
@@ -67,10 +70,12 @@ def get_username(cur):
         return user["username"]
     return None
 
+# Placeholder route
 @app.route("/")
 def home():
     return "Hello, World!"
 
+# Route/function "Log out" button is clicked to ensure user is properly logged out
 @app.route("/logout", methods=['POST'])
 def logout():
     conn = None
@@ -90,6 +95,7 @@ def logout():
         if conn:
             conn.close()
 
+# Route/function when any button is clicked on while logged in to ensure the user is still logged in
 @app.route("/check", methods=['GET'])
 def check():
     conn = None
@@ -115,7 +121,8 @@ def check():
     finally:
         if conn:
             conn.close()
-    
+
+# Route/function when the "Log in" button is clicked on the login page and authenticating the user by giving them an auth token  
 @app.route("/login", methods=['POST'])
 def login():
     conn = None
@@ -152,6 +159,7 @@ def login():
         if conn:
             conn.close()
 
+# Route/function when the "Sign Up" button is clicked and storing the user's credentials in the database
 @app.route("/signup", methods=['POST'])
 def signup():
     conn = None
@@ -191,6 +199,7 @@ def signup():
         if conn:
             conn.close()
 
+# Route/function when the "Stop recording" button is clicked and the audio is being transcribed
 @app.route("/transcribe", methods=['POST'])
 def transcribe():
 
@@ -241,6 +250,7 @@ def transcribe():
     
     return jsonify({"text": text})
 
+# Route/function from acquiring all transcripts from the database
 @app.route("/get-transcripts", methods=['GET'])
 def get_transcripts():
     conn = None
@@ -262,6 +272,7 @@ def get_transcripts():
         if conn:
             conn.close()
 
+# Route/function when the X button is clicked and need to delete a transcript from the database
 @app.route("/delete-transcript/<int:transcript_id>", methods=['DELETE'])
 def delete_transcript(transcript_id):
     conn = None
