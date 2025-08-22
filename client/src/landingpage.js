@@ -19,7 +19,7 @@ function LandingPage() {
 
     const handleLogout = async () => {
         try {
-            await fetch("http://localhost:5000/logout", {
+            await fetch("/logout", { // Use http://localhost:5000/logout for development
                 method: "POST",
                 credentials: "include",
             });
@@ -53,7 +53,6 @@ function LandingPage() {
             mediaRecorderRef.current.stop();
             mediaRecorderRef.current.onstop = async () => {
                 const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
-                console.log("Recording finished:", audioBlob);
 
                 mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
 
@@ -64,13 +63,12 @@ function LandingPage() {
 
                 // Send the audio to the Whisper ASR model
                 try {
-                    const response = await fetch("http://localhost:5000/transcribe", {
+                    const response = await fetch("/transcribe", { // Use http://localhost:5000/transcribe for development
                         method: "POST",
                         body: formData,
                         credentials: "include",
                     });
                     const data = await response.json();
-                    console.log("Transcription:", data.text);
                     setTranscription(data.text);
                 } catch (error) {
                     console.error("Transcription failed:", error);
@@ -86,12 +84,11 @@ function LandingPage() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("http://localhost:5000/check", {
+                const response = await fetch("/check", { // Use http://localhost:5000/check for development
                     method: "GET",
                     credentials: "include",
                 });
                 const data = await response.json();
-                console.log(data);
                 if (response.ok) {
                     setUsername(data.username);
                 } else {

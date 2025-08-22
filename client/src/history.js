@@ -12,7 +12,7 @@ function History() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("http://localhost:5000/check", {
+                const response = await fetch("/check", { // Use http://localhost:5000/check for development
                     method: "GET",
                     credentials: "include",
                 });
@@ -33,12 +33,11 @@ function History() {
     useEffect(() => {
         const fetchTranscripts = async () => {
             try {
-                const response = await fetch("http://localhost:5000/get-transcripts", {
+                const response = await fetch("/get-transcripts", { // Use http://localhost:5000/get-transcripts for development
                     method: "GET",
                     credentials: "include",
                 });
                 const data = await response.json();
-                console.log(data);
                 
                 if (response.ok) {
                     setTranscripts(data);
@@ -56,7 +55,7 @@ function History() {
 
     const deleteTranscript = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/delete-transcript/${id}`, {
+            const response = await fetch(`/delete-transcript/${id}`, { // Use http://localhost:5000/delete-transcript/${id} for development
                 method: "DELETE",
                 credentials: "include",
             });

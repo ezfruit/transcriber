@@ -51,7 +51,6 @@ function Login() {
             });
 
             const data = await response.json();
-            console.log('Server response:', data);
 
             if (response.ok) {
                 navigate('/home');

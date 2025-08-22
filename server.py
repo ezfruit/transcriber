@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, send_from_directory
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
@@ -11,8 +11,8 @@ import tempfile
 import subprocess
 import os
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
+app = Flask(__name__, static_folder="client/build", static_url_path="/")
+# CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # Used for development purposes only
 
 app.config["SECRET_KEY"] = secrets.token_hex(32)
 
@@ -70,10 +70,13 @@ def get_username(cur):
         return user["username"]
     return None
 
-# Placeholder route
-@app.route("/")
-def home():
-    return "Hello, World!"
+# Main route
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def home(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, "index.html")
 
 # Route/function "Log out" button is clicked to ensure user is properly logged out
 @app.route("/logout", methods=['POST'])
@@ -299,4 +302,4 @@ def delete_transcript(transcript_id):
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True) # TODO: Remember to change debug=False or just do app.run() when finishing the project
+    app.run(debug=False)
