@@ -8,22 +8,14 @@ import secrets
 import os
 import requests
 
-app = Flask(__name__, static_folder="client/build", static_url_path="/")
-# CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # Used for development purposes only
-
-HF_API_KEY = os.environ["HF_API_KEY"]
-HF_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-
-DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
-
-app.config["SECRET_KEY"] = secrets.token_hex(32)
-
 # Function that returns a dictionary when querying from the database
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
+
+DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
 
 # Function that connects to the database
 def db_connection():
@@ -53,6 +45,16 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
     conn.commit()
     conn.close()
+
+app = Flask(__name__, static_folder="client/build", static_url_path="/")
+# CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # Used for development purposes only
+
+init_db()
+
+HF_API_KEY = os.environ["HF_API_KEY"]
+HF_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
+
+app.config["SECRET_KEY"] = secrets.token_hex(32)
 
 # Get the current username if they are authenticated
 def get_username(cur):
@@ -296,6 +298,8 @@ def delete_transcript(transcript_id):
         if conn:
             conn.close()
 
-if __name__ == "__main__":
-    init_db()
-    app.run(debug=False)
+# Used for Development
+#
+# if __name__ == "__main__": 
+#     init_db()
+#     app.run(debug=False)
