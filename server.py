@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, make_response, send_from_directory
-#from flask_cors import CORS
+# from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import jwt
@@ -212,13 +212,21 @@ def transcribe():
     
     audio_file = request.files["audio"]
 
+    audio_bytes = audio_file.read()
+
     result = {}
 
     try:
+
+        headers = {
+            "Authorization": f"Bearer {HF_API_KEY}",
+            "Content-Type": "audio/webm"
+        }
+
         response = requests.post(
             HF_URL,
-            headers={"Authorization": f"Bearer {HF_API_KEY}"},
-            files={"file": audio_file}
+            headers=headers,
+            data=audio_bytes
         )
 
         if response.status_code != 200:
@@ -302,4 +310,4 @@ def delete_transcript(transcript_id):
 #
 # if __name__ == "__main__": 
 #     init_db()
-#     app.run(debug=False)
+#     app.run(debug=True)
