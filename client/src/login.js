@@ -16,7 +16,7 @@ function Login() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("http://localhost:5000/check", {
+                const response = await fetch("/check", { // Use http://localhost:5000/check for development
                     method: "GET",
                     credentials: "include",
                 });
@@ -41,7 +41,7 @@ function Login() {
         e.preventDefault();
         
         try {
-            const response = await fetch('http://localhost:5000/login', {
+            const response = await fetch('/login', { // Use http://localhost:5000/login for development
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

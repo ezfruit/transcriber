@@ -17,7 +17,7 @@ function Signup() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("http://localhost:5000/check", {
+                const response = await fetch("/check", { // Use http://localhost:5000/check for development
                     method: "GET",
                     credentials: "include",
                 });
@@ -54,7 +54,7 @@ function Signup() {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/signup', {
+            const response = await fetch('/signup', { // Use http://localhost:5000/signup for development
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
