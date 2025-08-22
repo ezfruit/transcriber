@@ -1,23 +1,20 @@
 from flask import Flask, request, jsonify, make_response, send_from_directory
-from flask_cors import CORS
+#from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import jwt
 from datetime import datetime, timedelta, timezone
 import secrets
-import torch
-from transformers import pipeline
-import tempfile
-import subprocess
 import os
+import requests
 
 app = Flask(__name__, static_folder="client/build", static_url_path="/")
 # CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # Used for development purposes only
 
-app.config["SECRET_KEY"] = secrets.token_hex(32)
+HF_API_KEY = os.environ["HF_API_KEY"]
+HF_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
 
-device = 0 if torch.cuda.is_available() else -1
-asr_pipeline = pipeline("automatic-speech-recognition", model="openai/whisper-small", device=device)
+app.config["SECRET_KEY"] = secrets.token_hex(32)
 
 # Function that returns a dictionary when querying from the database
 def dict_factory(cursor, row):
@@ -211,30 +208,27 @@ def transcribe():
     
     audio_file = request.files["audio"]
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp_webm:
-        audio_file.save(tmp_webm.name)
+    result = {}
 
-    # Convert .webm to .wav
-    tmp_wav_path = tmp_webm.name.replace(".webm", ".wav")
     try:
-        subprocess.run(
-            ["ffmpeg", "-y", "-i", tmp_webm.name, tmp_wav_path],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+        response = requests.post(
+            HF_URL,
+            headers={"Authorization": f"Bearer {HF_API_KEY}"},
+            files={"file": audio_file}
         )
-    except subprocess.CalledProcessError as e:
-        return jsonify({"error": "ffmpeg conversion failed", "details": e.stderr.decode()}), 500
 
-    result = asr_pipeline(tmp_wav_path)
+        if response.status_code != 200:
+            return jsonify({"error": "Transcription failed", "details": response.text}), 500
 
-    # Cleanup temp files
-    os.remove(tmp_webm.name)
-    os.remove(tmp_wav_path)
+        result = response.json()
 
-    conn = None
-
-    text = result["text"]
+    except Exception:
+        return jsonify({"error": "An unexpected error occurred"}), 500
+    
+    text = result.get("text", "").strip()
+    
+    if not text:
+        return jsonify({"error": "No transcription returned"}), 500
 
     try:
         conn = db_connection()

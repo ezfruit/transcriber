@@ -69,7 +69,14 @@ function LandingPage() {
                         credentials: "include",
                     });
                     const data = await response.json();
-                    setTranscription(data.text);
+
+                    if (response.ok) {
+                        setTranscription(data.text);
+                    } else if (data.error) {
+                        setTranscription(`Error: ${data.error}`);
+                    } else {
+                        setTranscription("No speech detected!");
+                    }
                 } catch (error) {
                     console.error("Transcription failed:", error);
                     setTranscription("Error transcribing audio.");
