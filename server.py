@@ -14,6 +14,8 @@ app = Flask(__name__, static_folder="client/build", static_url_path="/")
 HF_API_KEY = os.environ["HF_API_KEY"]
 HF_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
 
+DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
+
 app.config["SECRET_KEY"] = secrets.token_hex(32)
 
 # Function that returns a dictionary when querying from the database
@@ -25,7 +27,7 @@ def dict_factory(cursor, row):
 
 # Function that connects to the database
 def db_connection():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = dict_factory
     return conn
 
