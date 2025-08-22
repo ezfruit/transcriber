@@ -15,7 +15,7 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
+DB_PATH = os.path.join(os.getcwd(), "database.db")
 
 # Function that connects to the database
 def db_connection():
