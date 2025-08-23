@@ -12,6 +12,7 @@ function Home() {
 
     const navigate = useNavigate();
 
+    // This will get run after each instance of the page is refreshed/reloaded to ensure user is redirected back to the landing page if already authenticated
     useEffect(() => {
         const fetchUser = async () => {
             try {

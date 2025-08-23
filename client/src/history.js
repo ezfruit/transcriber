@@ -10,6 +10,7 @@ function History() {
     const [transcripts, setTranscripts] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // This will get run after each instance of the page is refreshed/reloaded to ensure user is authenticated
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -31,6 +32,7 @@ function History() {
         fetchUser();
     }, [navigate]);
 
+    // This will get run after each instance of the page is refreshed/reloaded to load the transcripts from the database
     useEffect(() => {
         const fetchTranscripts = async () => {
             try {
@@ -54,9 +56,10 @@ function History() {
         fetchTranscripts();
     }, []);
 
+    // This will get run when the X button is clicked to delete the transcript based on their id and delete it from the server
     const deleteTranscript = async (id) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/delete-transcript/${id}`, { // -- DEV: Use http://localhost:5000/delete-transcript/${id} for development
+            const response = await fetch(`${API_BASE_URL}/delete-transcript/${id}`, {
                 method: "DELETE",
                 credentials: "include",
             });
@@ -71,6 +74,7 @@ function History() {
         }
     };
 
+    // Loading message when the backend has not responded back
     if (loading) {
         return (
         <div> 

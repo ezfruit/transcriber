@@ -14,6 +14,7 @@ function Login() {
 
     const [errorMessage, setErrorMessage] = useState("");
 
+    // This will get run after each instance of the page is refreshed/reloaded to ensure user is redirected back to the landing page if already authenticated
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -38,6 +39,7 @@ function Login() {
         });
     };
 
+    // This will be run when the user clicks on the "Log In" button
     const handleSubmit = async (e) => {
         e.preventDefault();
         

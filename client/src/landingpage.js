@@ -18,6 +18,7 @@ function LandingPage() {
     const mediaRecorderRef = useRef(null);
     const chunksRef = useRef([]);
 
+    // This will get run when the user clicks on the "Log out" button
     const handleLogout = async () => {
         try {
             await fetch(`${API_BASE_URL}/logout`, {
@@ -31,6 +32,7 @@ function LandingPage() {
         }
     }
 
+    // This will get run when the user clicks on either "Add Recording" or "Stop Recording"
     const handleClick = async () => {
         if (!isRecording) {
             try {
@@ -89,6 +91,7 @@ function LandingPage() {
         }
     };
 
+    // This will get run after each instance of the page is refreshed/reloaded to ensure user is authenticated
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -112,6 +115,7 @@ function LandingPage() {
         fetchUser();
     }, [navigate]);
 
+    // Loading message when the backend has not responded back
     if (loading) {
         return (
         <div>
@@ -129,7 +133,7 @@ function LandingPage() {
             </div>
             <div className="dashboard-buttons">
                 <Link to="/history" className={`transcript-history-button ${isRecording ? "disabled" : ""}`}>Transcript History</Link>
-                <button onClick={handleLogout} className={`logout-button ${isRecording ? "disabled" : ""}`}>Log out</button>
+                <button onClick={handleLogout} className={`logout-button ${isRecording ? "disabled" : ""}`}>Log Out</button>
             </div>
             <br />
             <div className="transcript-buttons">
