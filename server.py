@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, make_response, send_from_directory
-# from flask_cors import CORS
+# from flask_cors import CORS # -- DEV: Uncomment this line if testing on development/localhost -- #
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import jwt
@@ -47,9 +47,13 @@ def init_db():
     conn.close()
 
 app = Flask(__name__, static_folder="client/build", static_url_path="/")
-# CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # Used for development purposes only
+# CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # -- DEV: Uncomment this line if testing on development/localhost -- #
 
 init_db()
+
+from dotenv import load_dotenv
+
+load_dotenv() 
 
 HF_API_KEY = os.environ["HF_API_KEY"]
 HF_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
@@ -306,8 +310,7 @@ def delete_transcript(transcript_id):
         if conn:
             conn.close()
 
-# Used for Development
-#
+# -- DEV: Uncomment the following lines if testing on development/localhost -- #
+
 # if __name__ == "__main__": 
-#     init_db()
-#     app.run(debug=True)
+#     app.run(debug=False)

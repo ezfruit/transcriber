@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.css'
+import { API_BASE_URL } from './index'
 
 function Login() {
 
@@ -16,7 +17,7 @@ function Login() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("/check", { // Use http://localhost:5000/check for development
+                const response = await fetch(`${API_BASE_URL}/check`, {
                     method: "GET",
                     credentials: "include",
                 });
@@ -41,7 +42,7 @@ function Login() {
         e.preventDefault();
         
         try {
-            const response = await fetch('/login', { // Use http://localhost:5000/login for development
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

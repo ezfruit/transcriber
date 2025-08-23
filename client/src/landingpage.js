@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import './landingpage.css'
+import { API_BASE_URL } from './index'
 
 function LandingPage() {
 
@@ -19,7 +20,7 @@ function LandingPage() {
 
     const handleLogout = async () => {
         try {
-            await fetch("/logout", { // Use http://localhost:5000/logout for development
+            await fetch(`${API_BASE_URL}/logout`, {
                 method: "POST",
                 credentials: "include",
             });
@@ -63,7 +64,7 @@ function LandingPage() {
 
                 // Send the audio to the Whisper ASR model
                 try {
-                    const response = await fetch("/transcribe", { // Use http://localhost:5000/transcribe for development
+                    const response = await fetch(`${API_BASE_URL}/transcribe`, {
                         method: "POST",
                         body: formData,
                         credentials: "include",
@@ -91,7 +92,7 @@ function LandingPage() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("/check", { // Use http://localhost:5000/check for development
+                const response = await fetch(`${API_BASE_URL}/check`, {
                     method: "GET",
                     credentials: "include",
                 });

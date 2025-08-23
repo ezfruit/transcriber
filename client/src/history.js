@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import './history.css'
+import { API_BASE_URL } from './index'
 
 function History() {
 
@@ -12,7 +13,7 @@ function History() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("/check", { // Use http://localhost:5000/check for development
+                const response = await fetch(`${API_BASE_URL}/check`, {
                     method: "GET",
                     credentials: "include",
                 });
@@ -33,7 +34,7 @@ function History() {
     useEffect(() => {
         const fetchTranscripts = async () => {
             try {
-                const response = await fetch("/get-transcripts", { // Use http://localhost:5000/get-transcripts for development
+                const response = await fetch(`${API_BASE_URL}/get-transcripts`, { 
                     method: "GET",
                     credentials: "include",
                 });
@@ -55,7 +56,7 @@ function History() {
 
     const deleteTranscript = async (id) => {
         try {
-            const response = await fetch(`/delete-transcript/${id}`, { // Use http://localhost:5000/delete-transcript/${id} for development
+            const response = await fetch(`${API_BASE_URL}/delete-transcript/${id}`, { // -- DEV: Use http://localhost:5000/delete-transcript/${id} for development
                 method: "DELETE",
                 credentials: "include",
             });

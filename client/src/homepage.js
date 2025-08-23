@@ -6,6 +6,7 @@ import Signup from './signup';
 import LandingPage from './landingpage';
 import History from './history';
 import './homepage.css';
+import { API_BASE_URL } from './index'
 
 function Home() {
 
@@ -14,7 +15,7 @@ function Home() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("/check", { // Use http://localhost:5000/check for development
+                const response = await fetch(`${API_BASE_URL}/check`, {
                     method: "GET",
                     credentials: "include",
                 });
