@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, make_response, send_from_directory
-# from flask_cors import CORS # -- DEV: Uncomment this line if testing on development/localhost -- #
+# from flask_cors import CORS # -- DEV: Uncomment this line if testing on localhost -- #
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import jwt
@@ -47,7 +47,7 @@ def init_db():
     conn.close()
 
 app = Flask(__name__, static_folder="client/build", static_url_path="/")
-# CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # -- DEV: Uncomment this line if testing on development/localhost -- #
+# CORS(app, supports_credentials=True, origins=["http://localhost:3000"]) # -- DEV: Uncomment this line if testing on localhost -- #
 
 init_db()
 
@@ -310,7 +310,7 @@ def delete_transcript(transcript_id):
         if conn:
             conn.close()
 
-# -- DEV: Uncomment the following lines if testing on development/localhost -- #
+# -- DEV: Uncomment the following lines if testing on localhost -- #
 
 # if __name__ == "__main__": 
 #     app.run(debug=False)
