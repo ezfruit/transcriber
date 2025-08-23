@@ -22,10 +22,11 @@ To run locally, follow the following steps:
 1. Clone the repository
    ```bash
    git clone https://github.com/your-username/transcriber.git
-   cd transcriber
    ```
+   You may need to ```cd transcriber``` if you are not inside the repository. This will be your root directory.
+   
 2. In the file server.py, hit Ctrl+F (Windows) or Command+F (Mac) and search up "DEV", all lines that needs to be changed will appear.
-3. Uncomment all of the above said lines by deleting only the beginning '#'.
+3. Uncomment all of the above said lines.
 4. Ensure you are in the root directory. Then create a Python virtual environment:
     ```bash
     python -m venv venv
@@ -51,7 +52,7 @@ To run locally, follow the following steps:
 
 7. Install all frontend dependencies.
 
-   From the root directory, do the following commands:
+   From the root directory, run the following commands:
 
    ```bash
    cd client
@@ -70,7 +71,7 @@ To run locally, follow the following steps:
    python server.py
    ```
 
-10. Start the frontend by running the following commands from the root directory.
+10. In a separate terminal, start the frontend by running the following commands from the root directory.
 
      ```
      cd client
